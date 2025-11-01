@@ -42,7 +42,6 @@ import { updateTransaction } from "@/app/actions/transactions";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Transaction } from "@prisma/client";
 
 const transactionSchema = z.object({
   type: z.enum(["income", "expense"]),
@@ -71,7 +70,18 @@ interface Wallet {
 
 interface EditTransactionSheetProps {
   children: React.ReactNode;
-  transaction: Transaction & { category: Category | null };
+  transaction: {
+    id: string;
+    type: string;
+    amount: number;
+    description: string | null;
+    walletId: string;
+    categoryId: string | null;
+    date: Date;
+    tags: string[];
+    category: Category | null;
+    wallet: Wallet;
+  };
   wallets: Wallet[];
   categories: Category[];
 }
@@ -219,7 +229,6 @@ export function EditTransactionSheet({
                             disabled={(date) =>
                               date > new Date() || date < new Date("1900-01-01")
                             }
-                            initialFocus
                           />
                         </PopoverContent>
                       </Popover>

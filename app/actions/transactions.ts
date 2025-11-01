@@ -15,7 +15,7 @@ export async function createTransaction(data: {
 }) {
   const user = await requireAuth();
 
-  const transaction = await prisma.transaction.create({
+  await prisma.transaction.create({
     data: {
       userId: user.id,
       type: data.type,
@@ -31,8 +31,6 @@ export async function createTransaction(data: {
   revalidatePath("/dashboard/transactions");
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/wallets");
-
-  return transaction;
 }
 
 export async function updateTransaction(
@@ -49,7 +47,7 @@ export async function updateTransaction(
 ) {
   const user = await requireAuth();
 
-  const transaction = await prisma.transaction.update({
+  await prisma.transaction.update({
     where: {
       id: transactionId,
       userId: user.id,
@@ -68,8 +66,6 @@ export async function updateTransaction(
   revalidatePath("/dashboard/transactions");
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/wallets");
-
-  return transaction;
 }
 
 export async function deleteTransaction(transactionId: string) {
