@@ -2,9 +2,17 @@ import { getCurrentUser } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { MoreHorizontal, Plus, Edit, Trash } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { CreateTransactionDialog } from "@/components/transactions/create-transaction-dialog";
+import { EditTransactionSheet } from "@/components/transactions/edit-transaction-sheet";
+import { DeleteTransactionAlert } from "@/components/transactions/delete-transaction-alert";
 import { format } from "date-fns";
 
 async function getTransactions(userId: string) {
@@ -148,6 +156,39 @@ export default async function TransactionsPage() {
                             {format(new Date(transaction.date), "h:mm a")}
                           </p>
                         </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <span className="sr-only">Open menu</span>
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <EditTransactionSheet
+                              transaction={transaction}
+                              wallets={wallets}
+                              categories={categories}
+                            >
+                              <DropdownMenuItem
+                                onSelect={(e) => e.preventDefault()}
+                              >
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                            </EditTransactionSheet>
+                            <DeleteTransactionAlert
+                              transactionId={transaction.id}
+                            >
+                              <DropdownMenuItem
+                                onSelect={(e) => e.preventDefault()}
+                                className="text-red-600"
+                              >
+                                <Trash className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DeleteTransactionAlert>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     ))}
                   </div>
